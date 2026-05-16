@@ -1,5 +1,8 @@
 {% set payment_methods = ['credit_card', 'coupon', 'bank_transfer', 'gift_card'] %}
 
+{{ config(materialized='incremental') }}
+
+
 with orders as (
 
     select * from {{ ref('stg_orders') }}
@@ -10,6 +13,12 @@ payments as (
 
     select * from {{ ref('int_order_payments_pivoted') }}
 
+),
+
+order_date_max as (
+
+    select max(order_date) as last_order_date
+    from orders
 )
 
 select
@@ -28,3 +37,8 @@ select
     left join payments
         on orders.order_id = payments.order_id
 
+{% if is_incremental() %}
+
+where orders.order_date > (select max(order_date) from {{ this }})
+
+{% endif %}
