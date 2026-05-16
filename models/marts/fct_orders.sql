@@ -39,6 +39,8 @@ select
 
 {% if is_incremental() %}
 
-where orders.order_date > (select max(order_date) from {{ this }})
+-- where orders.order_date > (select max(order_date) from {{ this }}) - interval '3 days'
+where orders.order_date > {{ dbt.dateadd('day', -3, '(select max(order_date) from ' ~ this ~ ')') }}
+
 
 {% endif %}
