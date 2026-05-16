@@ -26,8 +26,10 @@ models:
       - name: number_of_orders
         description: Count of the number of orders a customer has placed
 
-      - name: total_order_amount
+      - name: customer_lifetime_value
         description: Total value (AUD) of a customer's orders
+        tests:
+          - not_negative
 
   - name: orders
     description: This table has basic information about orders, as well as some derived facts based on payments
@@ -62,11 +64,13 @@ models:
         description: Total amount (AUD) of the order
         tests:
           - not_null
+          - not_negative
 
       - name: credit_card_amount
         description: Amount of the order (AUD) paid for by credit card
         tests:
           - not_null
+          - not_negative
 
       - name: coupon_amount
         description: Amount of the order (AUD) paid for by coupon
@@ -77,8 +81,10 @@ models:
         description: Amount of the order (AUD) paid for by bank transfer
         tests:
           - not_null
+          - not_negative
 
       - name: gift_card_amount
         description: Amount of the order (AUD) paid for by gift card
         tests:
           - not_null
+          - not_negative
