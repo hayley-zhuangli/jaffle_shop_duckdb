@@ -17,7 +17,11 @@ select
     orders.customer_id,
     orders.order_date,
     orders.status,
-    payments.{{ payment_method }}_amount,
+
+    {% for payment_method in payment_methods -%}
+    {{ payment_method }}_amount,
+    {% endfor -%}
+
     payments.total_amount as amount
 
     from orders
